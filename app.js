@@ -30,7 +30,6 @@ app.use((err, req, res, next) => {
   res.status(status).send({
     message: status === 500 ? 'Ошибка на сервере' : message,
   });
-  next();
 });
 
 app.listen(3000, () => {
