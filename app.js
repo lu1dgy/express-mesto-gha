@@ -6,6 +6,7 @@ const cardRouter = require('./routes/cards');
 
 const app = express();
 app.use(bodyParser.json());
+
 mongoose
   .connect('mongodb://localhost:27017/mestodb')
   .then(() => console.log('Соединение с базой данных установлено'))
