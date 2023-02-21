@@ -59,7 +59,7 @@ module.exports.addCardLike = (req, res) => {
       } else if (err.name === 'ValidationError') {
         next(
           new BadRequestError(
-            'Переданы некорректные данные  для постановки лайка.'
+            'Переданы некорректные данные для постановки лайка.'
           )
         );
       } else {
@@ -83,7 +83,7 @@ module.exports.removeCardLike = (req, res) => {
         next(new NotFoundError(`Передан несуществующий id=${cardId} карточки`));
       } else if (err.name === 'ValidationError') {
         next(
-          new BadRequestError('Переданы некорректные данные  для снятия лайка.')
+          new BadRequestError('Переданы некорректные данные для снятия лайка.')
         );
       } else {
         next(err);
