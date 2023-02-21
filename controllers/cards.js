@@ -2,13 +2,13 @@ const Card = require('../models/card');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send({ data: cards }))
     .catch((err) => res.status(500).send({ message: `Error: ${err}` }));
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
@@ -26,7 +26,7 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   const cardId = req.params.cardId;
   Card.findByIdAndDelete(cardId)
     .then(() => {
@@ -43,7 +43,7 @@ module.exports.deleteCard = (req, res) => {
     });
 };
 
-module.exports.addCardLike = (req, res) => {
+module.exports.addCardLike = (req, res, next) => {
   const cardId = req.params.cardId;
   Card.findByIdAndUpdate(
     cardId,
@@ -68,7 +68,7 @@ module.exports.addCardLike = (req, res) => {
     });
 };
 
-module.exports.removeCardLike = (req, res) => {
+module.exports.removeCardLike = (req, res, next) => {
   const cardId = req.params.cardId;
   Card.findByIdAndUpdate(
     cardId,
