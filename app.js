@@ -26,9 +26,9 @@ app.use('/', userRouter);
 app.use('/', cardRouter);
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'Ошибка на сервере' : message,
+  const { message, status = 500 } = err;
+  res.status(status).send({
+    message: status === 500 ? 'Ошибка на сервере' : message,
   });
   next();
 });
