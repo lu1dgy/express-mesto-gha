@@ -26,6 +26,13 @@ app.get('/', (req, res) => {
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: '63f4c50b0c811a7781305230', // вставьте сюда _id созданного в предыдущем пункте пользователя
+  };
+  next();
+});
+
 app.listen(3000, () => {
   console.log('Server started on port 3000');
 });
