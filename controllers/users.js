@@ -12,11 +12,11 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then(() => {
+    .then((user) => {
       res.status(200).send({ message: 'Пользователь создан' });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         next(
           new BadRequestError(
             'Переданы некорректные данные при создании пользователя.'
