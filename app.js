@@ -5,6 +5,8 @@ const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { NotFoundError } = require('./errors/NotFoundError');
 
+const { PORT = 3000 } = process.env;
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -39,6 +41,6 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log('Server started on port 3000');
 });
