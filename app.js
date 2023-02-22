@@ -12,6 +12,7 @@ mongoose
   .then(() => console.log('Соединение с базой данных установлено'))
   .catch((err) => {
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);
+    next(err);
   });
 
 app.use((req, res, next) => {
@@ -26,10 +27,12 @@ app.use('/', userRouter);
 app.use('/', cardRouter);
 
 app.use((err, req, res, next) => {
-  const { message, status = 500 } = err;
-  res.status(status).send({
-    message: status === 500 ? 'Ошибка на сервере' : message,
+  console.error(err);
+  const { message, statusCode = 500 } = err;
+  res.status(statusCode).send({
+    message: statusCode === 500 ? 'Ошибка на сервере' : message,
   });
+  next(err);
 });
 
 app.listen(3000, () => {
