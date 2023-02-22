@@ -28,19 +28,14 @@ module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
     .then((user) => {
+      if (!user) {
+        throw new NotFoundError(
+          `Пользователь по указанному id=${userId} не найден. `
+        );
+      }
       res.status(200).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(
-          new NotFoundError(
-            `Пользователь по указанному id=${userId} не найден. `
-          )
-        );
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports.updateProfile = (req, res, next) => {
