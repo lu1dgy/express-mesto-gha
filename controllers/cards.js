@@ -65,7 +65,15 @@ module.exports.addCardLike = (req, res, next) => {
       }
       res.status(200).send(card);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(
+          new BadRequestError('Переданы некорректные данные для снятия лайка.')
+        );
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.removeCardLike = (req, res, next) => {
@@ -83,5 +91,13 @@ module.exports.removeCardLike = (req, res, next) => {
       }
       res.status(200).send({ data: card });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(
+          new BadRequestError('Переданы некорректные данные для снятия лайка.')
+        );
+      } else {
+        next(err);
+      }
+    });
 };
