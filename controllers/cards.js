@@ -63,19 +63,9 @@ module.exports.addCardLike = (req, res, next) => {
           `Карточка с указанным id=${cardId} не найдена.`
         );
       }
-      res.status(200).send({ data: card });
+      res.status(200).send(card);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(
-          new BadRequestError(
-            'Переданы некорректные данные для постановки лайка.'
-          )
-        );
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports.removeCardLike = (req, res, next) => {
@@ -93,13 +83,5 @@ module.exports.removeCardLike = (req, res, next) => {
       }
       res.status(200).send({ data: card });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(
-          new BadRequestError('Переданы некорректные данные для снятия лайка.')
-        );
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
