@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const { NotFoundError } = require('./errors/NotFoundError');
 
 const app = express();
 app.use(bodyParser.json());
@@ -25,6 +26,9 @@ app.use((req, res, next) => {
 // Обработчики роутов для пользователей
 app.use('/', userRouter);
 app.use('/', cardRouter);
+app.use('*', () => {
+  throw new NotFoundError('Этот адрес не найден. Путь неправильный');
+});
 
 app.use((err, req, res, next) => {
   console.error(err);

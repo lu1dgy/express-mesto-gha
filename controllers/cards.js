@@ -47,7 +47,15 @@ module.exports.deleteCard = (req, res, next) => {
       }
       res.status(200).send({ message: 'Card deleted' });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(
+          new BadRequestError('Переданы некорректные данные для снятия лайка.')
+        );
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.addCardLike = (req, res, next) => {
