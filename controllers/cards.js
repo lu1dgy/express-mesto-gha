@@ -39,18 +39,15 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   const cardId = req.params.cardId;
   Card.findByIdAndDelete(cardId)
-    .then(() => {
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError(
+          `Карточка с указанным id=${cardId} не найдена.`
+        );
+      }
       res.status(200).send({ message: 'Card deleted' });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(
-          new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`)
-        );
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports.addCardLike = (req, res, next) => {
@@ -61,12 +58,15 @@ module.exports.addCardLike = (req, res, next) => {
     { new: true }
   )
     .then((card) => {
+      if (!card) {
+        throw new NotFoundError(
+          `Карточка с указанным id=${cardId} не найдена.`
+        );
+      }
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new NotFoundError(`Передан несуществующий id=${cardId} карточки`));
-      } else if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(
           new BadRequestError(
             'Переданы некорректные данные для постановки лайка.'
@@ -86,12 +86,15 @@ module.exports.removeCardLike = (req, res, next) => {
     { new: true }
   )
     .then((card) => {
+      if (!card) {
+        throw new NotFoundError(
+          `Карточка с указанным id=${cardId} не найдена.`
+        );
+      }
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new NotFoundError(`Передан несуществующий id=${cardId} карточки`));
-      } else if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(
           new BadRequestError('Переданы некорректные данные для снятия лайка.')
         );

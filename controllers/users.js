@@ -53,7 +53,7 @@ module.exports.updateProfile = (req, res, next) => {
     { new: true, runValidators: true }
   )
     .then((user) => {
-      res.s.send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
