@@ -15,7 +15,6 @@ mongoose
   .then(() => console.log('Соединение с базой данных установлено'))
   .catch((err) => {
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);
-    next(err);
   });
 
 app.use((req, res, next) => {
@@ -33,7 +32,6 @@ app.use('*', () => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err);
   const { message, statusCode = 500 } = err;
   res.status(statusCode).send({
     message: statusCode === 500 ? 'Ошибка на сервере' : message,

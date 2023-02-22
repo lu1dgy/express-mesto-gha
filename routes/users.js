@@ -6,6 +6,7 @@ const {
   updateProfile,
   updateAvatar,
 } = require('../controllers/users');
+
 const router = express.Router();
 
 router.get('/users', getUsers);

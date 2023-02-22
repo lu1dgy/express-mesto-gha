@@ -6,6 +6,7 @@ const {
   addCardLike,
   removeCardLike,
 } = require('../controllers/cards');
+
 const router = express.Router();
 
 router.get('/cards', getCards);
