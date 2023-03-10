@@ -111,3 +111,16 @@ module.exports.login = (req, res, next) => {
       next(e);
     });
 };
+
+module.exports.getMyself = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
