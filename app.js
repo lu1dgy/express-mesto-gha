@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { NotFoundError } = require('./errors/NotFoundError');
+const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -17,13 +18,8 @@ mongoose
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);
   });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63f4c50b0c811a7781305230', // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-  next();
-});
-
+app.post('/signin', login);
+app.post('/signup', createUser);
 // Обработчики роутов для пользователей
 app.use('/', userRouter);
 app.use('/', cardRouter);
