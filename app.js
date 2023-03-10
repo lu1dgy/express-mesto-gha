@@ -6,6 +6,7 @@ const cardRouter = require('./routes/cards');
 const { NotFoundError } = require('./utils/errors/NotFoundError');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3000 } = process.env;
 
@@ -28,15 +29,7 @@ app.use('/', cardRouter);
 app.use('*', () => {
   throw new NotFoundError('Этот адрес не найден. Путь неправильный');
 });
-
-app.use((err, req, res, next) => {
-  const { message, statusCode = 500 } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'Ошибка на сервере' : message,
-  });
-  next(err);
-});
-
+app.use(errorHandler);
 app.listen(PORT, () => {
   console.log('Server started on port 3000');
 });
