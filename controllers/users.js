@@ -4,6 +4,7 @@ const User = require('../models/user');
 
 const { NotFoundError } = require('../utils/errors/NotFoundError');
 const { BadRequestError } = require('../utils/errors/BadRequestError');
+const { ConflictError } = require('../utils/errors/ConflictError');
 const { SECRET_JWT } = require('../utils/constants');
 
 module.exports.getUsers = (req, res, next) => {
@@ -31,6 +32,8 @@ module.exports.createUser = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestError(err.message));
+    } else if (err.code === 11000) {
+      next(new ConflictError('Пользователь с такой почтой уже существует'));
     } else {
       next(err);
     }
