@@ -10,11 +10,9 @@ module.exports = (req, _, next) => {
     return Promise.reject(new UnauthorizedError('Необходима авторизация'));
   }
   const token = extractBearerToken(authorization);
-  let payload;
   jwt
     .verify(token, SECRET_JWT)
-    .then((newToken) => {
-      payload = newToken;
+    .then((payload) => {
       req.user = payload;
       next();
     })
