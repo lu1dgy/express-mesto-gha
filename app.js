@@ -5,6 +5,7 @@ const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { NotFoundError } = require('./utils/errors/NotFoundError');
 const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,6 +22,7 @@ mongoose
 app.post('/signin', login);
 app.post('/signup', createUser);
 // Обработчики роутов для пользователей
+app.use(auth);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', () => {
