@@ -9,14 +9,14 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return UnauthorizedError(res);
+    throw new UnauthorizedError('Нужно авторизоваться');
   }
   const token = extractBearerToken(authorization);
   let payload;
   try {
     payload = jwt.verify(token, SECRET_JWT);
   } catch (err) {
-    return UnauthorizedError(res);
+    return next(new UnauthorizedError('Нужно авторизоваться'));
   }
   req.user = payload; // записываем пейлоуд в объект запроса
   next(); // пропускаем запрос дальше

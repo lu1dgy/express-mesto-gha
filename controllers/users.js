@@ -116,7 +116,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000,
         sameSite: true,
       });
-      res.send(token);
+      res.send({ token });
     })
     .catch((e) => {
       next(e);
@@ -132,6 +132,14 @@ module.exports.getMyself = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        next(
+          BadRequestError(
+            'Переданы некорректные данные при получении сведений о текущем пользователе',
+          ),
+        );
+      } else if (err.message === 'NotFound') {
+        next(new NotFoundError('Пользователь не найден'));
+      } else next(err);
     });
 };
