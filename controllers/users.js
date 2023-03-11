@@ -15,29 +15,37 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createUser = async (req, res, next) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+  bcrypt
+    .hash(password, 10)
+    .then((hashedPassword) => User.create({
       name,
       about,
       avatar,
       email,
       password: hashedPassword,
-    });
-    res.send(user);
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      next(new BadRequestError(err.message));
-    } else if (err.code === 11000) {
-      next(new ConflictError('Пользователь с такой почтой уже существует'));
-    } else {
-      next(err);
-    }
-  }
+    }))
+    .then((user) => {
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError(err.message));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с такой почтой уже существует'));
+      } else {
+        next(err);
+      }
+    })
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {

@@ -3,6 +3,7 @@ const { SECRET_JWT } = require('../utils/constants');
 const { UnauthorizedError } = require('../utils/errors/UnauthorizedError');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
+
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
