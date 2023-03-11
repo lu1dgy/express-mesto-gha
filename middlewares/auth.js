@@ -3,7 +3,7 @@ const { SECRET_JWT } = require('../utils/constants');
 const { UnauthorizedError } = require('../utils/errors/UnauthorizedError');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
-
+// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -17,5 +17,5 @@ module.exports = (req, res, next) => {
     return next(new UnauthorizedError('Нужно авторизоваться'));
   }
   req.user = payload; // записываем пейлоуд в объект запроса
-  return next(); // пропускаем запрос дальше
+  next(); // пропускаем запрос дальше
 };
