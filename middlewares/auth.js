@@ -4,18 +4,23 @@ const { UnauthorizedError } = require('../utils/errors/UnauthorizedError');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 
-module.exports = (req, _, next) => {
+module.exports = (req, res, next) => {
   const { authorization } = req.headers;
+
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return Promise.reject(new UnauthorizedError('Необходима авторизация'));
+    return UnauthorizedError(res);
   }
+
   const token = extractBearerToken(authorization);
-  jwt
-    .verify(token, SECRET_JWT)
-    .then((payload) => {
-      req.user = payload;
-      next();
-    })
-    .catch(() => Promise.reject(new UnauthorizedError('Необходима авторизация')));
-  return 1;
+  let payload;
+
+  try {
+    payload = jwt.verify(token, SECRET_JWT);
+  } catch (err) {
+    return UnauthorizedError(res);
+  }
+
+  req.user = payload; // записываем пейлоуд в объект запроса
+
+  next(); // пропускаем запрос дальше
 };
