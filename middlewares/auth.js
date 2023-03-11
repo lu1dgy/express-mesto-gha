@@ -10,12 +10,12 @@ module.exports = (req, res, next) => {
     return next(new UnauthorizedError('Нужно авторизоваться'));
   }
   const token = extractBearerToken(authorization);
-  let payload;
+  let userId;
   try {
-    payload = jwt.verify(token, SECRET_JWT);
+    userId = jwt.verify(token, SECRET_JWT);
   } catch (err) {
     return next(new UnauthorizedError('Нужно авторизоваться'));
   }
-  req.user = payload; // записываем пейлоуд в объект запроса
+  req.user = userId; // записываем пейлоуд в объект запроса
   next(); // пропускаем запрос дальше
 };

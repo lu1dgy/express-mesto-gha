@@ -35,6 +35,7 @@ module.exports.createUser = (req, res, next) => {
         about: user.about,
         avatar: user.avatar,
         email: user.email,
+        _id: user._id,
       });
     })
     .catch((err) => {
@@ -50,11 +51,11 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  const { userId } = req.params;
-  User.findById(userId)
+  const { id } = req.params;
+  User.findById(id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`Пользователь по указанному id=${userId} не найден. `);
+        throw new NotFoundError(`Пользователь по указанному id=${id} не найден. `);
       }
       res.send(user);
     })
@@ -70,8 +71,8 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.checkUser(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, SECRET_JWT, {
+    .then(({ _id: userId }) => {
+      const token = jwt.sign({ userId }, SECRET_JWT, {
         expiresIn: '7d',
       });
       res
@@ -80,7 +81,7 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000 * 10,
           sameSite: true,
         })
-        .send({ token });
+        .send({ _id: token });
     })
     .catch((e) => {
       next(e);
@@ -88,7 +89,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getMyself = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.user.userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
@@ -120,13 +121,13 @@ const updateUser = (res, next, userId, update) => {
 // две маленькие — функции-декораторы
 const updateUserProfile = (req, res, next) => {
   const { name, about } = req.body;
-  const userId = req.user._id;
+  const { userId } = req.user;
   const update = { name, about };
   updateUser(res, next, userId, update);
 };
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const userId = req.user._id;
+  const { userId } = req.user;
   const update = { avatar };
   updateUser(res, next, userId, update);
 };
