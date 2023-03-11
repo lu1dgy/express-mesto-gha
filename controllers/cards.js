@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 const { BadRequestError } = require('../utils/errors/BadRequestError');
 const { ForbiddenError } = require('../utils/errors/ForbiddenError');
@@ -5,6 +6,7 @@ const { NotFoundError } = require('../utils/errors/NotFoundError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
+    .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
     .catch(next);
 };
@@ -15,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
       } else {
         next(err);
@@ -30,13 +32,13 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
       }
-      if (!card.owner.equals(req.user._id)) {
+      if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить эту карточку, она чужая');
       }
       res.send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
       } else {
         next(err);
@@ -54,7 +56,7 @@ module.exports.addCardLike = (req, res, next) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
       } else {
         next(err);
@@ -72,7 +74,7 @@ module.exports.removeCardLike = (req, res, next) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
       } else {
         next(err);
