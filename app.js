@@ -22,6 +22,7 @@ mongoose
 app.post('/signin', loginValidator, login);
 app.post('/signup', registrationValidator, createUser);
 // Обработчики роутов для пользователей
+
 app.use(auth);
 app.use(rootRouter);
 
