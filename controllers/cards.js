@@ -13,8 +13,8 @@ module.exports.getCards = (req, res, next) => {
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
-  const { userId } = req.user;
-  Card.create({ name, link, owner: userId })
+  const owner = req.user._id;
+  Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -32,7 +32,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
       }
-      if (card.owner.toString() !== req.user.userId) {
+      if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить эту карточку, она чужая');
       }
       res.send({ message: 'Карточка удалена' });
@@ -48,7 +48,7 @@ module.exports.deleteCard = (req, res, next) => {
 
 module.exports.addCardLike = (req, res, next) => {
   const { cardId } = req.params;
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user.userId } }, { new: true })
+  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
         throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
