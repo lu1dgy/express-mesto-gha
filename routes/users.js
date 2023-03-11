@@ -6,7 +6,6 @@ const {
   updateAvatar,
   getMyself,
 } = require('../controllers/users');
-const auth = require('../middlewares/auth');
 const {
   userIdValidator,
   userInfoValidator,
@@ -16,8 +15,8 @@ const {
 const router = express.Router();
 
 router.get('/users', getUsers);
+router.get('/users/me', getMyself);
 router.get('/users/:userId', userIdValidator, getUserById);
-router.get('/users/me', auth, getMyself);
 router.patch('/users/me', userInfoValidator, updateProfile);
 router.patch('/users/me/avatar', avatarValidator, updateAvatar);
 
