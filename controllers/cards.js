@@ -27,7 +27,7 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  Card.findByIdAndDelete(cardId)
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
@@ -35,49 +35,36 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить эту карточку, она чужая');
       }
+      return Card.findByIdAndDelete(cardId);
+    })
+    .then(() => {
       res.send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
-      } else {
-        next(err);
-      }
+      next(err);
     });
 };
 
-module.exports.addCardLike = (req, res, next) => {
-  const { cardId } = req.params;
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
-      }
-      res.send(card);
-    })
-    .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
-      } else {
-        next(err);
-      }
-    });
+const handleCardLike = (action) => async (req, res, next) => {
+  try {
+    const { cardId } = req.params;
+    const update = action === 'add'
+      ? { $addToSet: { likes: req.user._id } }
+      : { $pull: { likes: req.user._id } };
+    const options = { new: true };
+    const card = await Card.findByIdAndUpdate(cardId, update, options);
+    if (!card) {
+      throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
+    }
+    res.send(card);
+  } catch (err) {
+    if (err instanceof mongoose.Error.CastError) {
+      next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
+    } else {
+      next(err);
+    }
+  }
 };
 
-module.exports.removeCardLike = (req, res, next) => {
-  const { cardId } = req.params;
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError(`Карточка с указанным id=${cardId} не найдена.`);
-      }
-      res.send({ data: card });
-    })
-    .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
-      } else {
-        next(err);
-      }
-    });
-};
+module.exports.addCardLike = handleCardLike('add');
+module.exports.removeCardLike = handleCardLike('remove');

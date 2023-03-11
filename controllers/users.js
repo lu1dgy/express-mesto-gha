@@ -35,6 +35,7 @@ module.exports.createUser = (req, res, next) => {
         about: user.about,
         avatar: user.avatar,
         email: user.email,
+        _id: user._id,
       });
     })
     .catch((err) => {
@@ -80,7 +81,7 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000 * 10,
           sameSite: true,
         })
-        .send({ token });
+        .send({ message: 'Вы успешно вошли' });
     })
     .catch((e) => {
       next(e);
