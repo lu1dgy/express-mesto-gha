@@ -53,8 +53,7 @@ userSchema.statics.checkUser = function (email, password) {
         }
         return user;
       });
-    })
-    .catch(() => Promise.reject(new UnauthorizedError('Неправильные почта или пароль')));
+    });
 };
 
 const User = mongoose.model('user', userSchema);

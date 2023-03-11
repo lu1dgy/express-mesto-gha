@@ -9,14 +9,14 @@ module.exports.userIdValidator = celebrate({
 
 module.exports.userInfoValidator = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 });
 
 module.exports.avatarValidator = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(AVATAR_URL_REGEX),
+    avatar: Joi.string().required().pattern(AVATAR_URL_REGEX),
   }),
 });
 

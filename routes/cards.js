@@ -10,10 +10,10 @@ const { cardValidator, cardIdValidator } = require('../utils/validators/cardVali
 
 const router = express.Router();
 
-router.get('/cards', getCards);
-router.post('/cards', cardValidator, createCard);
-router.delete('/cards/:cardId', cardIdValidator, deleteCard);
-router.put('/cards/:cardId/likes', cardIdValidator, addCardLike);
-router.delete('/cards/:cardId/likes', cardIdValidator, removeCardLike);
+router.get('/', getCards);
+router.post('/', cardValidator, createCard);
+router.delete('/:cardId', cardIdValidator, deleteCard);
+router.put('/:cardId/likes', cardIdValidator, addCardLike);
+router.delete('/:cardId/likes', cardIdValidator, removeCardLike);
 
 module.exports = router;

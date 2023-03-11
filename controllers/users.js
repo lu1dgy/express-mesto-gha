@@ -132,14 +132,6 @@ module.exports.getMyself = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(
-          BadRequestError(
-            'Переданы некорректные данные при получении сведений о текущем пользователе',
-          ),
-        );
-      } else if (err.message === 'NotFound') {
-        next(new NotFoundError('Пользователь не найден'));
-      } else next(err);
+      next(err);
     });
 };
