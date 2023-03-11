@@ -79,6 +79,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000,
         sameSite: true,
       });
+      res.send({ message: 'Вы успешно вошли' });
     })
     .catch((e) => {
       next(e);
