@@ -35,13 +35,15 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить эту карточку, она чужая');
       }
-      return Card.findByIdAndDelete(cardId);
+      return card.remove();
     })
     .then(() => {
       res.send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
-      next(err);
+      if (err instanceof mongoose.Error.ValidationError) {
+        next(new BadRequestError('Передан некорректный id для удаления карточки.'));
+      }
     });
 };
 
