@@ -41,9 +41,7 @@ module.exports.deleteCard = (req, res, next) => {
       res.send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        next(new BadRequestError('Передан некорректный id для удаления карточки.'));
-      }
+      next(err);
     });
 };
 
