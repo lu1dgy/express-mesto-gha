@@ -7,6 +7,7 @@ const corsOptions = {
     'https://localhost:3000',
     'http://mesto.lapkes.nomoredomains.work',
     'https://mesto.lapkes.nomoredomains.work',
+    'mesto.lapkes.nomoredomains.work',
   ],
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   credentials: true,
