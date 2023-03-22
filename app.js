@@ -5,14 +5,17 @@ const cookieParser = require('cookie-parser');
 const rootRouter = require('./routes/index');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const cors = require('./middlewares/cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const { loginValidator, registrationValidator } = require('./utils/validators/usersValidator');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
+app.use(cors);
 
 mongoose
   .connect('mongodb://localhost:27017/mestodb')
@@ -21,6 +24,7 @@ mongoose
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);
   });
 
+app.use(requestLogger);
 app.post('/signin', loginValidator, login);
 app.post('/signup', registrationValidator, createUser);
 // Обработчики роутов для пользователей
@@ -28,9 +32,10 @@ app.post('/signup', registrationValidator, createUser);
 app.use(auth);
 app.use(rootRouter);
 
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log('Server started on port 3000');
+  console.log(`Server started on port ${PORT}`);
 });

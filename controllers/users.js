@@ -46,8 +46,7 @@ module.exports.createUser = (req, res, next) => {
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -79,12 +78,21 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           httpOnly: true,
           maxAge: 3600000 * 10,
-          sameSite: true,
+          secure: true,
         })
         .send({ message: 'Вы успешно вошли' });
     })
     .catch((e) => {
       next(e);
+    });
+};
+
+module.exports.logout = (req, res, next) => {
+  res
+    .clearCookie('jwt')
+    .send({ message: 'Успешный выход' })
+    .catch((err) => {
+      next(err);
     });
 };
 
