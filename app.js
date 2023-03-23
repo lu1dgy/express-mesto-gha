@@ -5,7 +5,6 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rootRouter = require('./routes/index');
-const auth = require('./middlewares/auth');
 const { cors } = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
@@ -32,8 +31,6 @@ app.get('/crash-test', () => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-
-app.use(auth);
 app.use(rootRouter);
 
 app.use(errorLogger);
