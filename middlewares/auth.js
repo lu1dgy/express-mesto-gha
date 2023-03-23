@@ -1,5 +1,7 @@
+require('dotenv').config();
 const token = require('jsonwebtoken');
-const { SECRET_JWT } = require('../utils/constants');
+
+const { SECRET_JWT } = process.env;
 const { UnauthorizedError } = require('../utils/errors/UnauthorizedError');
 
 // eslint-disable-next-line consistent-return
