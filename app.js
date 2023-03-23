@@ -15,16 +15,17 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
+
+app.use(requestLogger);
 app.use(cors);
 
 mongoose
-  .connect('mongodb://localhost:27017/mestodb')
+  .connect('127.0.0.1/mestodb')
   .then(() => console.log('Соединение с базой данных установлено'))
   .catch((err) => {
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);
   });
 
-app.use(requestLogger);
 app.post('/signin', loginValidator, login);
 app.post('/signup', registrationValidator, createUser);
 // Обработчики роутов для пользователей
