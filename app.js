@@ -11,7 +11,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const { loginValidator, registrationValidator } = require('./utils/validators/usersValidator');
 
-const { PORT = 3000, DB_ADDRESS = 'mongodb://localhost:27017/mestodb', NODE_ENV } = process.env;
+const { PORT = 3000, DB_ADDRESS = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 const app = express();
 app.use(cookieParser());
