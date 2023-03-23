@@ -79,6 +79,7 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           maxAge: 3600000 * 10,
           secure: true,
+          sameSite: 'None',
         })
         .send({ message: 'Вы успешно вошли' });
     })
