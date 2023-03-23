@@ -7,7 +7,7 @@ const { NotFoundError } = require('../utils/errors/NotFoundError');
 const { BadRequestError } = require('../utils/errors/BadRequestError');
 const { ConflictError } = require('../utils/errors/ConflictError');
 
-const { SECRET_JWT } = process.env;
+const { SECRET_JWT, NODE_ENV } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -72,14 +72,14 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.checkUser(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, SECRET_JWT, {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? SECRET_JWT : 'test', {
         expiresIn: '7d',
       });
       res
         .cookie('jwt', token, {
           maxAge: 3600000 * 10,
-          secure: true,
-          sameSite: 'None',
+          secure: NODE_ENV === 'production',
+          sameSite: true,
           httpOnly: true,
         })
         .send({ message: 'Вы успешно вошли' });
