@@ -1,18 +1,10 @@
-[![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
+# Project Mesto
 
-# Проект Mesto фронтенд + бэкенд
+## Description:
+<p>This is api for my frontend service mesto you can find full api here</p>
+<a href='https://github.com/lu1dgy/react-mesto-api-full-gha'>https://github.com/lu1dgy/react-mesto-api-full-gha</a>
 
-## Директории
+## How to start
 
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки  
-`/models` — папка с файлами описания схем пользователя и карточки
-
-Остальные директории вспомогательные, создаются при необходимости разработчиком
-
-## Запуск проекта
-
-`npm run start` — запускает сервер  
-`npm run dev` — запускает сервер с hot-reload
-
-<a href="https://github.com/lu1dgy/express-mesto-gha">ссылка на репозиторий</a>
+`npm run start` — start server
+`npm run dev` — start server with hot reload
