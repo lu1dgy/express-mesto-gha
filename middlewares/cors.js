@@ -8,6 +8,7 @@ const allowedCors = [
   'https://localhost:3000',
   'http://mesto.lapkes.nomoredomains.work',
   'https://mesto.lapkes.nomoredomains.work',
+  'mesto.lapkes.nomoredomains.work',
 ];
 
 const corsOptions = {
