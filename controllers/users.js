@@ -79,7 +79,7 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 3600000 * 10,
           secure: NODE_ENV === 'production',
-          sameSite: true,
+          sameSite: 'None',
           httpOnly: true,
         })
         .send({ message: 'Вы успешно вошли' });
