@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
@@ -17,7 +18,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(requestLogger);
-app.use(cors);
 
 mongoose
   .connect(DB_ADDRESS)
@@ -26,6 +26,7 @@ mongoose
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);
   });
 
+app.use(cors);
 app.post('/signin', loginValidator, login);
 app.post('/signup', registrationValidator, createUser);
 // Обработчики роутов для пользователей
