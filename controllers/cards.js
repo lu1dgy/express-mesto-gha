@@ -30,6 +30,9 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(cardId)) {
+    throw new BadRequestError('Передан невалидный id карточки.');
+  }
   Card.findById(cardId)
     .then((card) => {
       if (!card) {

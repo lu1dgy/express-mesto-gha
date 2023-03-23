@@ -67,6 +67,18 @@ module.exports.getUserById = (req, res, next) => {
       }
     });
 };
+module.exports.getMyself = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
@@ -98,20 +110,6 @@ module.exports.logout = (req, res, next) => {
     });
 };
 
-module.exports.getMyself = (req, res, next) => {
-  User.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      }
-      res.send(user);
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
-// большая функция с общей логикой обновления пользователя
 const updateUser = (res, next, userId, update) => {
   User.findByIdAndUpdate(userId, update, { new: true, runValidators: true })
     .then((user) => {
@@ -128,7 +126,7 @@ const updateUser = (res, next, userId, update) => {
       }
     });
 };
-// две маленькие — функции-декораторы
+
 const updateUserProfile = (req, res, next) => {
   const { name, about } = req.body;
   const userId = req.user._id;
