@@ -10,7 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const { loginValidator, registrationValidator } = require('./utils/validators/usersValidator');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_ADDRESS = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 const app = express();
 app.use(cookieParser());
@@ -20,7 +20,7 @@ app.use(requestLogger);
 app.use(cors);
 
 mongoose
-  .connect('127.0.0.1/mestodb')
+  .connect(DB_ADDRESS)
   .then(() => console.log('Соединение с базой данных установлено'))
   .catch((err) => {
     console.log(`Ошибка при подключении к базе данных: ${err.message}`);

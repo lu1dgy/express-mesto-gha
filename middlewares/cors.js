@@ -5,7 +5,7 @@ const allowedCors = [
   'http://mesto.lapkes.nomoredomains.work',
   'https://mesto.lapkes.nomoredomains.work',
 ];
-const DEFAULT_ALLOWED_METHODS = 'GET,PUT,PATCH,POST,DELETE';
+const DEFAULT_ALLOWED_METHODS = 'GET,PUT,PATCH,POST,DELETE,HEAD';
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { method } = req;
