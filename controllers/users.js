@@ -6,7 +6,8 @@ const User = require('../models/user');
 const { NotFoundError } = require('../utils/errors/NotFoundError');
 const { BadRequestError } = require('../utils/errors/BadRequestError');
 const { ConflictError } = require('../utils/errors/ConflictError');
-const { SECRET_JWT } = require('../utils/constants');
+
+const { SECRET_JWT } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -79,6 +80,7 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000 * 10,
           secure: true,
           sameSite: 'None',
+          httpOnly: true,
         })
         .send({ message: 'Вы успешно вошли' });
     })
