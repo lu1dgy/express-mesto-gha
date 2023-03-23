@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rootRouter = require('./routes/index');
 const { login, createUser } = require('./controllers/users');
@@ -14,11 +15,11 @@ const { loginValidator, registrationValidator } = require('./utils/validators/us
 const { PORT = 3000, DB_ADDRESS = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 const app = express();
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(requestLogger);
-
+app.use(helmet());
 mongoose
   .connect(DB_ADDRESS)
   .then(() => console.log('Соединение с базой данных установлено'))
